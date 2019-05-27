@@ -25,9 +25,7 @@ def main():
     peak_ratios = pd.DataFrame(index=['1e-1', '1e-2', '1e-3', '1e-4', '1e-5'])
 
     for function in range(1, 21):
-        print(function)
-
-        results = pickle.load(open('benchmarking_results/benchmarking_result_{}.pkl'.format(function), 'rb'))
+        results = pickle.load(open('results/benchmarking_result_{}.pkl'.format(function), 'rb'))
 
         col_name = 'F{}'.format(function)
         index = function-1
@@ -46,7 +44,7 @@ def main():
             plt.subplot(4, 5, function)  # subplot indexes from 1
             plt.plot(x_axis, y_axis, 'k-')
 
-    plt.savefig('benchmarking_results/nmmso_benchmark.png')
+    plt.savefig('results/nmmso_benchmark.png')
     plt.show()
 
     pd.set_option('display.max_columns', None)  # make sure all columns are printed below
