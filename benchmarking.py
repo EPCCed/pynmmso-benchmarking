@@ -136,7 +136,7 @@ class Benchmarking:
 
         return nswarms
 
-    def _add_convergence(self):
+    def add_convergence(self):
 
         self.locations = [s.mode_location for s in self.nmmso.swarms]
         convergence = [self.max_evals if c is None else c for c in self.convergence_evaluation]

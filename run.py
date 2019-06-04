@@ -23,7 +23,8 @@ class CECFunction:
     def fitness(self, x):
         res = self.f.evaluate(x)
 
-        # If seems that 1D problems return an array but other problems return a scalar - so we need to handle this
+        # If seems that 1D problems return an array but other problems return a scalar -
+        # so we need to handle this
         # CW: added float too (and the list) - but don't understand why it's needed
         if type(res) in [np.float64, float]:
             return res
@@ -72,7 +73,7 @@ class NmmsoRunner:
             # but nmmso.iterative doesn't give any indication when it has finished
             if benchmarking:
                 self.bm.benchmarking_result.SimulationSwarms.append(self.bm.total_swarms)
-                self.bm._add_convergence()
+                self.bm.add_convergence()
                 self.bm.all_found = [False for _ in range(len(self.bm.accuracies))]
 
         if benchmarking:
