@@ -67,7 +67,3 @@ The benchmarks were run on Cirrus as a multiprocessor job over 4 CPUs. Walltime 
 - not much difference between the 3 values in Table V
 
 - our Figure 2 is a little different; although many of the general trends are similar (especially e.g. F7, F9, F10), and the y-axis values are ~ equivalent, our runs seem to go on much longer (i.e. runs take longer to get to within 1e-5) - is this a problem?
-
-### Further info ###
-
-- the `.ideas` directory is a PyCharm config directory
