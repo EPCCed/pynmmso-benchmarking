@@ -1,10 +1,16 @@
 # pynmmso-benchmarking #
 
+Code to use [`pynmmso`](https://github.com/EPCCed/pynmmso/wiki/NMMSO) to run the [Benchmark Functions for CEC’2013 Special
+Session and Competition on Niching Methods for Multimodal Function Optimization](http://www.epitropakis.co.uk/sites/default/files/pubs/cec2013-niching-benchmark-tech-report.pdf).  The python implementation
+of these functions is taken from https://github.com/mikeagn/CEC2013, although some changes had to be made for Python 3.
+
+This code aims to reproduced the results published in Niching Migratory Multi-Swarm Optimser, described in: “Running Up Those Hills: Multi-Modal Search with the Niching Migratory Multi-Swarm Optimiser” by Jonathan E. Fieldsend published in Proceedings of the IEEE Congress on Evolutionary Computation, pages 2593-2600, 2014 (http://hdl.handle.net/10871/15247)
+
 ## How to run ##
 
 The benchmarks were run on Cirrus as a multiprocessor job over 4 CPUs. Walltime was set at 12 hrs in the PBS submission script, but took approximately 7 hrs. A mix of pre- and post-processing was used to generate these results.
 
-## Reproducing tables from Jonathan's paper (Fieldsend et al, 2014) ##
+## Reproducing tables from Fieldsend et al, 2014 ##
 
 ### Table II ###
 
