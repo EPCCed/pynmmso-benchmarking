@@ -2,7 +2,7 @@
 
 Code to use [`pynmmso`](https://github.com/EPCCed/pynmmso/wiki/NMMSO) to run the [Benchmark Functions for CEC’2013 Special
 Session and Competition on Niching Methods for Multimodal Function Optimization](http://www.epitropakis.co.uk/sites/default/files/pubs/cec2013-niching-benchmark-tech-report.pdf).  The python implementation
-of these functions is taken from https://github.com/mikeagn/CEC2013, although some changes had to be made for Python 3.
+of these functions is at https://github.com/EPCCed/cec2013-python/, and is included as a git submodule. This repository is a fork of the python directory of https://github.com/mikeagn/CEC2013, so that we could make the codebase Python 3 compliant.
 
 This code aims to reproduced the results published in Niching Migratory Multi-Swarm Optimser, described in: “Running Up Those Hills: Multi-Modal Search with the Niching Migratory Multi-Swarm Optimiser” by Jonathan E. Fieldsend published in Proceedings of the IEEE Congress on Evolutionary Computation, pages 2593-2600, 2014 (http://hdl.handle.net/10871/15247)
 
