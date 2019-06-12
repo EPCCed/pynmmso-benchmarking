@@ -100,9 +100,12 @@ class Benchmarking:
         #  - this is different to just returning the swarms at the end because most of the work of the algorithm
         #    could just be finding a slightly more optimal solution from an already optimal solution!
         #
-        # we need to know at which evaluation all global optima have been found
-        #   although, actually, 'evaluation' refers to 'number of times the objective function is evaluated',
-        #   I think, rather than the actual iterations of the algorithm...
+        #  - we want to know at which evaluation all global optima have been found:
+        #       however, 'evaluation' refers to 'number of times the objective function is evaluated',
+        #       rather than the actual iterations of the algorithm (and total evaluations made by the end of the final iteration)
+        #       which is the only metric we can measure. Each iteration of the algorithm may evaluate the objective function many
+        #       times, so, as with Jonathan's original code, there may be a very slight discrepancy between the absolute true number
+        #       of evaluations, and the number of evaluations returned
         #
 
         global_optima_fitness = self.problem.f.get_fitness_goptima()
