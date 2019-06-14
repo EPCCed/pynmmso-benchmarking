@@ -1,6 +1,6 @@
 import numpy as np
 from cec2013.cec2013 import CEC2013
-from nmmso import Nmmso
+from pynmmso import Nmmso
 
 
 import benchmarking as bm

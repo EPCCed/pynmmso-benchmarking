@@ -8,7 +8,15 @@ This code aims to reproduced the results published in Niching Migratory Multi-Sw
 
 ## How to run ##
 
-The benchmarks were run on Cirrus as a multiprocessor job over 4 CPUs. Walltime was set at 12 hrs in the PBS submission script, but took approximately 7 hrs. A mix of pre- and post-processing was used to generate these results.
+The repository should be cloned using
+
+```
+git clone --recurse-submodules https://github.com/EPCCed/pynmmso-benchmarking
+```
+
+The benchmarks were run on [Cirrus](http://www.cirrus.ac.uk) as a multiprocessor job over 4 CPUs. Walltime was set at 12 hrs in the PBS submission script, but took approximately 7 hrs. A mix of pre- and post-processing was used to generate these results.
+
+We have only tested running these jobs using the PBS job scheduler. If you run jobs where other schedulers are used and come across issues please raise them as a Github issue. 
 
 ## Reproducing tables from Fieldsend et al, 2014 ##
 
