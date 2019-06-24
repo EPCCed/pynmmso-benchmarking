@@ -1,5 +1,6 @@
 import csv
 import logging
+import os
 
 from dataclasses import dataclass
 import statistics
@@ -79,6 +80,9 @@ class Benchmarking:
 
         self.benchmarking_result.SimulationSwarms = []
 
+        if not os.path.exists("results"):
+            os.makedirs("results")
+
     def __str__(self):
         return 'id: {}\nnmmso: {}'.format(id(self), self.nmmso)
 
@@ -93,13 +97,13 @@ class Benchmarking:
 
     def _export_data(self):
 
-        with open("{}.csv".format(self.func_num), 'w', newline='') as raw_data_csv:
+        with open("results/{}.csv".format(self.func_num), 'w', newline='') as raw_data_csv:
             writer = csv.writer(raw_data_csv)
             writer.writerow(['0.1', '0.01', '0.001', '0.0001', '0.00001']*3)
             writer.writerows(self.benchmarking_result.raw_data)
 
         pickle.dump(self.benchmarking_result,
-                    open('benchmarking_result_{}.pkl'.format(self.func_num),
+                    open('results/benchmarking_result_{}.pkl'.format(self.func_num),
                          'wb'))
 
     def check_convergence(self):
