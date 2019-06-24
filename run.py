@@ -1,7 +1,9 @@
+import multiprocessing
+
 import numpy as np
+
 from cec2013.cec2013 import CEC2013
 from pynmmso import Nmmso
-
 
 import benchmarking as bm
 
@@ -46,7 +48,7 @@ class NmmsoRunner:
     def __init__(self, func_num, benchmarking=False):
 
         self.func_num = func_num
-        self.simulation_runs = 50
+        self.simulation_runs = 2
 
         max_evals = CEC2013(self.func_num).get_maxfes()
 
@@ -78,3 +80,17 @@ class NmmsoRunner:
 
         if benchmarking:
             self.bm.calculate_stats(export_data=True)
+
+
+def main():
+
+    jobs = []
+    for j in range(1, 12):
+
+        process = multiprocessing.Process(target=NmmsoRunner, args=(j, True))
+        jobs.append(process)
+        process.start()
+
+
+if __name__ == "__main__":
+    main()
