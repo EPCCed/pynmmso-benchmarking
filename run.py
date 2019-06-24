@@ -37,7 +37,7 @@ class CECFunction:
 def nmmso_runner(func_num, benchmarking=False):
 
     # Simplest way of running a multiprocessing job is to have the process as a single function,
-    # rather than try and shoehorn it into a class
+    # rather than try and use an unnecessary class
 
     #
     # for benchmarking we set up some loops to run all needed:
@@ -46,7 +46,7 @@ def nmmso_runner(func_num, benchmarking=False):
     #  - CR for accuracy level 1e-4
     #
 
-    simulation_runs = 2
+    simulation_runs = 50
     max_evals = CEC2013(func_num).get_maxfes()
     problem = CECFunction(func_num)
     nmmso = Nmmso(problem)
@@ -84,7 +84,7 @@ def nmmso_runner(func_num, benchmarking=False):
 def main():
 
     jobs = []
-    for j in range(1, 12):
+    for j in range(1, 21):
 
         process = multiprocessing.Process(target=nmmso_runner, args=(j, True))
         jobs.append(process)
