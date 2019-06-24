@@ -1,4 +1,6 @@
 import csv
+import logging
+
 from dataclasses import dataclass
 import statistics
 import pickle
@@ -23,10 +25,12 @@ class BenchmarkingResults:
     # list of Success Rates for all accuracy levels
     SuccessRate: list = None
 
-    # ConvergenceEvals: number of function evaluations required to reach convergence (at each accuracy rate)
+    # ConvergenceEvals: number of function evaluations required to reach
+    # convergence (at each accuracy rate)
     ConvergenceEvals: list = None
 
-    # ConvergenceRates: average and std dev (over total number of simulation runs ) of number of function evaluations
+    # ConvergenceRates: average and std dev (over total number of simulation runs )
+    # of number of function evaluations
     # required to reach convergence (per accuracy)
     ConvergenceRates: list = None
 
@@ -43,6 +47,9 @@ class BenchmarkingResults:
 class Benchmarking:
 
     def __init__(self):
+
+        logging.basicConfig(level=logging.DEBUG)
+
         self.problem = None
         self.nmmso = None
         self.simulation_runs = None
@@ -91,30 +98,38 @@ class Benchmarking:
             writer.writerow(['0.1', '0.01', '0.001', '0.0001', '0.00001']*3)
             writer.writerows(self.benchmarking_result.raw_data)
 
-        pickle.dump(self.benchmarking_result, open('benchmarking_result_{}.pkl'.format(self.func_num), 'wb'))
+        pickle.dump(self.benchmarking_result,
+                    open('benchmarking_result_{}.pkl'.format(self.func_num),
+                         'wb'))
 
     def check_convergence(self):
 
         #
-        # this is to help find the convergence rate. We need to know how quickly the global optima are found
-        #  - this is different to just returning the swarms at the end because most of the work of the algorithm
-        #    could just be finding a slightly more optimal solution from an already optimal solution!
+        # this is to help find the convergence rate. We need to know how quickly the
+        # global optima are found
+        #  - this is different to just returning the swarms at the end because most of the work
+        #    of the algorithm could just be finding a slightly more optimal solution from an
+        #    already optimal solution!
         #
         #  - we want to know at which evaluation all global optima have been found:
-        #       however, 'evaluation' refers to 'number of times the objective function is evaluated',
-        #       rather than the actual iterations of the algorithm (and total evaluations made by the end of the final iteration)
-        #       which is the only metric we can measure. Each iteration of the algorithm may evaluate the objective function many
-        #       times, so, as with Jonathan's original code, there may be a very slight discrepancy between the absolute true number
-        #       of evaluations, and the number of evaluations returned
+        #       however, 'evaluation' refers to 'number of times the objective function is
+        #       evaluated', rather than the actual iterations of the algorithm (and total
+        #       evaluations made by the end of the final iteration) which is the only metric
+        #       we can measure. Each iteration of the algorithm may evaluate the objective
+        #       function many times, so, as with Jonathan's original code, there may be a very
+        #       slight discrepancy between the absolute true number of evaluations, and the
+        #       number of evaluations returned
         #
 
         global_optima_fitness = self.problem.f.get_fitness_goptima()
         n_global_optima = self.problem.f.get_no_goptima()
 
-        # only count the number of swarms when the accuracy is less than 1e-5, to generate Fig. 2 in Fieldsend et al.
+        # only count the number of swarms when the accuracy is less than 1e-5,
+        # so we can generate Fig. 2 in Fieldsend et al.
         accuracy = 1e-5
         self.c_found = False
-        n_fittest = sum([abs(swarm.mode_value - global_optima_fitness) <= accuracy for swarm in self.nmmso.swarms])
+        n_fittest = sum([abs(swarm.mode_value - global_optima_fitness) <= accuracy
+                         for swarm in self.nmmso.swarms])
         nswarms = None
         if n_fittest <= n_global_optima and self.c_found is False:
             nswarms = len(self.nmmso.swarms)
@@ -124,18 +139,13 @@ class Benchmarking:
 
             if self.all_found[accuracy_index] is False:
 
-                n_fittest = sum([abs(swarm.mode_value - global_optima_fitness) <= accuracy for swarm in self.nmmso.swarms])
+                n_fittest = sum([abs(swarm.mode_value - global_optima_fitness) <= accuracy
+                                 for swarm in self.nmmso.swarms])
 
                 if n_fittest == n_global_optima:
                     self.all_found[accuracy_index] = True
                     self.convergence_evaluation[accuracy_index] = self.nmmso.evaluations
                     self.convergence_swarms[accuracy_index] = len(self.nmmso.swarms)
-
-        # if all(self.all_found):
-        #     print(self.all_found)
-        #     self.benchmarking_result.SimulationSwarms.append(self.total_swarms)
-        #     self._add_convergence()
-        #     self.all_found = [False for _ in range(len(self.accuracies))]
 
         return nswarms
 
@@ -143,13 +153,16 @@ class Benchmarking:
 
         self.locations = [s.mode_location for s in self.nmmso.swarms]
         convergence = [self.max_evals if c is None else c for c in self.convergence_evaluation]
-        self.benchmarking_result.raw_data.append(self.find_noptima() + convergence + self.convergence_swarms)
+        self.benchmarking_result.raw_data.append(self.find_noptima() +
+                                                 convergence +
+                                                 self.convergence_swarms)
         self.benchmarking_result.ConvergenceEvals.append(convergence)
         self.benchmarking_result.ConvergenceSwarms.append(self.convergence_swarms)
 
     def calculate_stats(self, export_data=False):
 
-        # since we want to do things by accuracy, it's much easier if we transpose the 2D array we have:
+        # since we want to do things by accuracy, it's much easier if we
+        # transpose the 2D array we have:
         self.raw_data = list(map(list, zip(*self.benchmarking_result.raw_data)))
 
         self.benchmarking_result.PeakRatio = []
@@ -197,10 +210,9 @@ class Benchmarking:
 
             noptima.append(count)
 
-            # we should have different logging levels - these print statements should be a low number
-
-            # print("~"*70)
-            # print("In the current population there exist {} global optimizers (accuracy: {})".format(count, accuracy))
+            logging.debug("~"*70)
+            logging.debug("In the current population there exist {}"
+                          "global optimizers (accuracy: {})".format(count, accuracy))
             # print("Global optimizers: {}".format(seeds))
 
         return noptima
@@ -229,9 +241,11 @@ class Benchmarking:
 
         """
             From Eqtn 3 in Benchmarking paper
-              - for each of the 50 runs, we need to find the number of evaluations it takes to find all global optima
+              - for each of the 50 runs, we need to find the number of evaluations it takes
+                to find all global optima
 
-            I've added in appropriate code in nmmso.Nmmso.find_convergence() to calculate this for each run
+            I've added in appropriate code in nmmso.Nmmso.find_convergence() to calculate
+            this for each run
 
         """
 
