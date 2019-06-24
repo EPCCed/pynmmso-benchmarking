@@ -48,7 +48,7 @@ class Benchmarking:
 
     def __init__(self):
 
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.WARNING)
 
         self.problem = None
         self.nmmso = None

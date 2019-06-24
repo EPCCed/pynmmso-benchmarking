@@ -5,7 +5,7 @@ import numpy as np
 from cec2013.cec2013 import CEC2013
 from pynmmso import Nmmso
 
-import benchmarking as bm
+import benchmarking as benchmarks
 
 
 class CECFunction:
@@ -34,50 +34,51 @@ class CECFunction:
         return self.mn, self.mx
 
 
-class NmmsoRunner:
+def nmmso_runner(func_num, benchmarking=False):
+
+    # Simplest way of running a multiprocessing job is to have the process as a single function,
+    # rather than try and shoehorn it into a class
 
     #
-    # for benchmarking stuff ideally we'd set up some loops to run all needed:
+    # for benchmarking we set up some loops to run all needed:
     #  - 20 problems
     #  - PR and SR for all accuracy levels (doesn't need a rerun of the simulations)
     #  - CR for accuracy level 1e-4
     #
 
-    def __init__(self, func_num, benchmarking=False):
+    simulation_runs = 2
+    max_evals = CEC2013(func_num).get_maxfes()
+    problem = CECFunction(func_num)
+    nmmso = Nmmso(problem)
 
-        self.func_num = func_num
-        self.simulation_runs = 2
+    if benchmarking:
+        bm = benchmarks.Benchmarking()
 
-        max_evals = CEC2013(self.func_num).get_maxfes()
-
-        if benchmarking:
-            self.bm = bm.Benchmarking()
-
-        for i in range(self.simulation_runs):
+        for i in range(simulation_runs):
 
             print('simulation run {} of function {}'.format(i, func_num))
 
-            self.problem = CECFunction(self.func_num)
-            self.nmmso = Nmmso(self.problem)
+            bm.run_info(problem, nmmso, simulation_runs, func_num)
 
-            if benchmarking:
-                self.bm.run_info(self.problem, self.nmmso, self.simulation_runs, self.func_num)
+            while nmmso.evaluations < max_evals:
+                nmmso.iterate()
 
-            while self.nmmso.evaluations < max_evals:
-                self.nmmso.iterate()
+                if not all(bm.all_found):
+                    bm.total_swarms[nmmso.evaluations] = bm.check_convergence()
 
-                if benchmarking and not all(self.bm.all_found):
-                    self.bm.total_swarms[self.nmmso.evaluations] = self.bm.check_convergence()
+            bm.benchmarking_result.SimulationSwarms.append(bm.total_swarms)
+            bm.add_convergence()
+            bm.all_found = [False for _ in range(len(bm.accuracies))]
 
-            # we should be able to move this to end of check_convergence,
-            # but nmmso.iterative doesn't give any indication when it has finished
-            if benchmarking:
-                self.bm.benchmarking_result.SimulationSwarms.append(self.bm.total_swarms)
-                self.bm.add_convergence()
-                self.bm.all_found = [False for _ in range(len(self.bm.accuracies))]
+        bm.calculate_stats(export_data=True)
 
-        if benchmarking:
-            self.bm.calculate_stats(export_data=True)
+    else:
+        for i in range(simulation_runs):
+
+            print('simulation run {} of function {}'.format(i, func_num))
+
+            while nmmso.evaluations < max_evals:
+                nmmso.iterate()
 
 
 def main():
@@ -85,7 +86,7 @@ def main():
     jobs = []
     for j in range(1, 12):
 
-        process = multiprocessing.Process(target=NmmsoRunner, args=(j, True))
+        process = multiprocessing.Process(target=nmmso_runner, args=(j, True))
         jobs.append(process)
         process.start()
 
