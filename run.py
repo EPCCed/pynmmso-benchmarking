@@ -25,9 +25,7 @@ class CECFunction:
     def fitness(self, x):
         res = self.f.evaluate(x)
 
-        # If seems that 1D problems return an array but other problems return a scalar -
-        # so we need to handle this
-        # CW: added float too (and the list) - but don't understand why it's needed
+        # 1D problems return an array but other problems return a scalar - so we need to handle this
         if type(res) in [np.float64, float]:
             return res
         return res[0]
