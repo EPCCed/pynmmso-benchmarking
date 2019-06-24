@@ -79,7 +79,7 @@ class Benchmarking:
 
         self.benchmarking_result.SimulationSwarms = []
 
-    def __repr__(self):
+    def __str__(self):
         return 'id: {}\nnmmso: {}'.format(id(self), self.nmmso)
 
     def run_info(self, problem, nmmso, simulation_runs, func_number):
