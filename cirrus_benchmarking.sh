@@ -15,4 +15,4 @@ cd $PBS_O_WORKDIR
 
 module load anaconda/python3
 source activate MOO
-python main.py &> stdout.txt
+python run.py &> stdout.txt
