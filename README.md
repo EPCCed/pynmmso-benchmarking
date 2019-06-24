@@ -1,6 +1,6 @@
-# pynmmso-benchmarking #
+# Benchmarking of pynmmso #
 
-Code to use [`pynmmso`](https://github.com/EPCCed/pynmmso/wiki/NMMSO) to run the [Benchmark Functions for CEC’2013 Special
+We have used [`pynmmso`](https://github.com/EPCCed/pynmmso/wiki/NMMSO) to run the functions defined in [Benchmark Functions for CEC’2013 Special
 Session and Competition on Niching Methods for Multimodal Function Optimization](http://www.epitropakis.co.uk/sites/default/files/pubs/cec2013-niching-benchmark-tech-report.pdf).  The python implementation
 of these functions is at https://github.com/EPCCed/cec2013-python/, and is included as a git submodule. This repository is a fork of the python directory of https://github.com/mikeagn/CEC2013, so that we could make the codebase Python 3 compliant.
 
@@ -14,7 +14,15 @@ The repository should be cloned using
 git clone --recurse-submodules https://github.com/EPCCed/pynmmso-benchmarking
 ```
 
-The benchmarks were run on [Cirrus](http://www.cirrus.ac.uk) as a multiprocessor job over 4 CPUs. Walltime was set at 12 hrs in the PBS submission script, but took approximately 7 hrs. A mix of pre- and post-processing was used to generate these results.
+The Conda environment we used, which installs the prerequisite python modules, can be recreated by running
+
+```
+conda env create -f nmmso_benchmarking.yml
+```
+
+It is possible to run the code on a normal desktop computer. However, we ran the benchmarks on [Cirrus](http://www.cirrus.ac.uk) as a multiprocessor job over 4 CPUs. Walltime was set at 12 hrs in the PBS submission script, but took approximately 7 hr - the pbs script used is [`cirrus_benchmarking.sh`](cirrus_benchmarking.sh), and the results we generated are stored in [`results`](results). 
+
+Some preprocessing is done in `benchmarking.py`, but once the benchmarking has finished, you will want to run `postprocessing_graphs.py` - this generates the convergence rates, tabulates them nicely, and produces the graph below.
 
 We have only tested running these jobs using the PBS job scheduler. If you run jobs where other schedulers are used and come across issues please raise them as a Github issue. 
 
